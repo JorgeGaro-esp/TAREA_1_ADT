@@ -1,9 +1,10 @@
 package entidades;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Medicamento {
+public class Medicamento implements Serializable {
 
     // Atributos
     private long id;

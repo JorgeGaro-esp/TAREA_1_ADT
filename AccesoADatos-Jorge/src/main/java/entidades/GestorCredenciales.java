@@ -41,4 +41,40 @@ public class GestorCredenciales {
 		}
 		return Optional.empty();
 	}
+	
+	public boolean existeUsuario(String nombreUsuario) throws IOException {
+		if (ADMIN_USER.equals(nombreUsuario)) {
+			return true;
+		}
+		if (!Files.exists(fichero)) {
+			return false;
+		}
+		for (String linea : Files.readAllLines(fichero, StandardCharsets.UTF_8)) {
+			String[] partes = linea.split("\\|");
+			if (partes.length > 0 && partes[0].trim().equals(nombreUsuario)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	 
+	public void anadirUsuario(String usuario, String password, String nombrePersona, String perfil)
+			throws IOException {
+		// Si el fichero no termina en salto de línea, se añade para no pegar líneas
+		boolean necesitaSalto = false;
+		if (Files.exists(fichero) && Files.size(fichero) > 0) {
+			try (RandomAccessFile raf = new RandomAccessFile(fichero.toFile(), "r")) {
+				raf.seek(raf.length() - 1);
+				necesitaSalto = (raf.read() != '\n');
+			}
+		}
+		String linea = (necesitaSalto ? System.lineSeparator() : "")
+				+ usuario + "|" + password + "|" + nombrePersona + "|" + perfil
+				+ System.lineSeparator();
+		Files.write(fichero, linea.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE,
+				StandardOpenOption.APPEND);
+	}
+
+
 }
