@@ -2,6 +2,7 @@ package entidades;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.Properties;
 
 public class Sesion {
 
@@ -9,9 +10,10 @@ public class Sesion {
 	private final GestorCredenciales gestor;
 	public static final Usuario INVITADO = new Usuario("", "Invitado", Perfil.INVITADO);
 	private Usuario actual = INVITADO;
+	private Properties properties;
 
 	// Constructor
-	public Sesion(GestorCredenciales gestor) {
+	public Sesion(GestorCredenciales gestor, Properties properties) {
 		this.gestor = gestor;
 	}
 
@@ -31,9 +33,16 @@ public class Sesion {
 		if (user == null || user.trim().isEmpty() || pass == null || pass.trim().isEmpty())
 			throw new IllegalArgumentException("Usuario y contraseña no pueden estar vacíos.");
 
-		// Si no hay ninguna excepcion
-		Optional<Usuario> u = gestor.verificar(user, pass); // Nuevo usuario que sustituira al Invitado
-		// Comrpueba que u no es un objeto vacio
+		// Administrador definido en application.properties
+		if (user.equals(properties.getProperty("admin.usuario"))
+				&& pass.equals(properties.getProperty("admin.password"))) {
+			actual = new Usuario(user, "Administrador",
+					Perfil.desdeTexto(properties.getProperty("admin.perfil")));
+			return true;
+		}
+
+		// Resto de usuarios: credenciales.txt
+		Optional<Usuario> u = gestor.verificar(user, pass);
 		if (u.isPresent()) {
 			actual = u.get();
 		}

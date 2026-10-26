@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.List;
+import java.util.Properties;
 import java.util.Scanner;
 
 import entidades.Alergia;
@@ -18,19 +19,22 @@ import entidades.Usuario;
 
 public class Main {
 
+	//Propiedades
+	static final String PROPERTIES_FILE = "app.properties";
+	static Properties properties = new Properties();
+	
 	//Scanner para poder usar el teclado
 	static Scanner sc = new Scanner(System.in);
 	
 	//Las rutas donde estan o estaran los documentos .txt o .dat  para los gestores
-	static String rutaCred = "src/main/resources/credenciales.txt";
-	static String rutaAler = "src/main/resources";
+	
 	
 	//Instancia de los gestores que usaremos para poder registrar usuarios y alergias con medicamento
-	static GestorCredenciales gestor = new GestorCredenciales(rutaCred);
-	static GestorAlergias gestorAlergias = new GestorAlergias(rutaAler);
+	static GestorCredenciales gestor = new GestorCredenciales(properties.getProperty("credenciales.fichero"));
+	static GestorAlergias gestorAlergias = new GestorAlergias(properties.getProperty("alergias.fichero"));
 	
 	//Sesion
-	static Sesion sesion = new Sesion(gestor);
+	static Sesion sesion = new Sesion(gestor,properties);
 
 	public static void main(String[] args) {
 
