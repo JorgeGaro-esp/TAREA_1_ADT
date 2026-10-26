@@ -20,8 +20,17 @@ import entidades.Usuario;
 public class Main {
 
 	//Propiedades
-	static final String PROPERTIES_FILE = "app.properties";
+	static final String PROPERTIES_FILE = "application.properties";
 	static Properties properties = new Properties();
+
+	// Se cargan ANTES de crear los gestores
+	static {
+		try (BufferedReader br = new BufferedReader(new FileReader(PROPERTIES_FILE))) {
+			properties.load(br);
+		} catch (IOException e) {
+			System.out.println("No se pudo leer " + PROPERTIES_FILE + ", se usan valores por defecto.");
+		}
+	}
 	
 	//Scanner para poder usar el teclado
 	static Scanner sc = new Scanner(System.in);

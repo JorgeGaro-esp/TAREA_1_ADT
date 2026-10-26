@@ -15,6 +15,7 @@ public class Sesion {
 	// Constructor
 	public Sesion(GestorCredenciales gestor, Properties properties) {
 		this.gestor = gestor;
+		this.properties = properties;
 	}
 
 	// Getters y Setters
